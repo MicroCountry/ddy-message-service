@@ -4,8 +4,6 @@
 package com.ddy.message.provider;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import com.ddy.message.param.EMailMessage;
 import com.ddy.message.param.EmailTarget;
 import com.ddy.message.result.ResponseDTO;
@@ -32,7 +30,7 @@ public interface MailProvider {
      * @param unit
      * 		      时间单位
      */
-    public void sendEMail(EMailMessage eMailMessage, EmailTarget emailTarget, boolean isAsync,boolean isAttachment,Long delay,TimeUnit unit);
+    public void sendEMail(EMailMessage eMailMessage, EmailTarget emailTarget, boolean isAsync,boolean isAttachment);
 
     /**
      * 发送普通文本文件
@@ -44,7 +42,7 @@ public interface MailProvider {
      * @return
      */
     public ResponseDTO<?> sendEmail(List<String> receiver, List<String> ccReceiver,
-                                    String subject, String content,Long delay,TimeUnit unit);
+                                    String subject, String content);
 
     /**
      * 发送普通文本文件，异步
@@ -56,7 +54,7 @@ public interface MailProvider {
      * @return
      */
     public void sendEmailAsync(List<String> receiver, List<String> ccReceiver,
-                               String subject, String content,Long delay,TimeUnit unit);
+                               String subject, String content);
 
     /**
      * 发送带附件的邮件
@@ -70,7 +68,7 @@ public interface MailProvider {
      * @return
      */
     public ResponseDTO<?> sendEmailWithAffix(List<String> receiver, List<String> ccReceiver,
-                                             String subject, String content, List<String> affixNames, List<byte[]> files,Long delay,TimeUnit unit);
+                                             String subject, String content, List<String> affixNames, List<byte[]> files);
 
     /**
      * 发送带附件的邮件,异步
@@ -84,7 +82,7 @@ public interface MailProvider {
      * @return
      */
     public void sendEmailWithAffixAsync(List<String> receiver, List<String> ccReceiver,
-                                        String subject, String content, List<String> affixNames, List<byte[]> files,Long delay,TimeUnit unit);
+                                        String subject, String content, List<String> affixNames, List<byte[]> files);
     
     /**
      * 发送带附件的邮件
@@ -97,7 +95,7 @@ public interface MailProvider {
      * @param files
      * @return
      */
-    public boolean sendEmailWhithFile(final List<String> toList, final String subject, final String content, List<String> ccList,List<String> affixNames,List<String> filesPath,Long delay,TimeUnit unit);
+    public boolean sendEmailWhithFile(final List<String> toList, final String subject, final String content, List<String> ccList,List<String> affixNames,List<String> filesPath);
     
     /**
      * 发送带附件的邮件 ，异步
@@ -110,5 +108,5 @@ public interface MailProvider {
      * @param files
      * @return
      */
-    public void sendEmailWhithFileAsync(final List<String> toList, final String subject, final String content, List<String> ccList,List<String> affixNames,List<String> filesPath,Long delay,TimeUnit unit);
+    public void sendEmailWhithFileAsync(final List<String> toList, final String subject, final String content, List<String> ccList,List<String> affixNames,List<String> filesPath);
 }

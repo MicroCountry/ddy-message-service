@@ -4,7 +4,6 @@
 package com.ddy.message.provider;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
@@ -41,13 +40,8 @@ public class MailProviderImpl implements MailProvider {
 	private TaskExecutor mailTaskExecutor;
 
 	@Override
-	public void sendEMail(final EMailMessage eMailMessage, final EmailTarget emailTarget, boolean isAsync,final boolean isAttachment,final Long delay,final TimeUnit unit) {
+	public void sendEMail(final EMailMessage eMailMessage, final EmailTarget emailTarget, boolean isAsync,final boolean isAttachment) {
 		checkSendMailParam(eMailMessage, emailTarget);
-		try {
-			Thread.sleep(unit.toMillis(delay));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		if (!isMailSendingOpen()) {
 			logger.info("current env mail sending is not opened!!!");
 			return;
@@ -56,22 +50,12 @@ public class MailProviderImpl implements MailProvider {
 	}
 
 	@Override
-	public ResponseDTO<?> sendEmail(final List<String> receiver,final List<String> ccReceiver,final String subject,final String content,final Long delay,final TimeUnit unit) {
-		try {
-			Thread.sleep(unit.toMillis(delay));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public ResponseDTO<?> sendEmail(final List<String> receiver,final List<String> ccReceiver,final String subject,final String content) {
 		return sendEmailHandle(receiver, ccReceiver, subject, content);
 	}
 
 	@Override
-	public void sendEmailAsync(final List<String> receiver, final List<String> ccReceiver, final String subject, final String content,final Long delay,final TimeUnit unit) {
-		try {
-			Thread.sleep(unit.toMillis(delay));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public void sendEmailAsync(final List<String> receiver, final List<String> ccReceiver, final String subject, final String content) {
 		try {
 			mailTaskExecutor.execute(new Runnable() {
 				@Override
@@ -102,7 +86,11 @@ public class MailProviderImpl implements MailProvider {
 		if (eMailMessage == null || emailTarget == null) {
 			throw new IllegalArgumentException("参数为null!");
 		}
-		if (StringUtils.isBlank(eMailMessage.getContent()) || CollectionUtils.isNotEmpty(emailTarget.getReceiver())) {
+		logger.info(eMailMessage.getSubject());
+		logger.info(eMailMessage.getContent());
+		logger.info(emailTarget.getReceiver().toString());
+		logger.info(emailTarget.getReceiver().toArray().toString());
+		if (StringUtils.isBlank(eMailMessage.getContent()) || !CollectionUtils.isNotEmpty(emailTarget.getReceiver())) {
 			throw new IllegalArgumentException("内容为空或没有收件人");
 		}
 	}
@@ -113,28 +101,23 @@ public class MailProviderImpl implements MailProvider {
 
 	@Override
 	public ResponseDTO<?> sendEmailWithAffix(List<String> receiver, List<String> ccReceiver, String subject, String content,
-			List<String> affixNames,List<byte[]> files,Long delay,TimeUnit unit) {
-		return sendEmailWithAffixHandle(receiver, ccReceiver, subject, content, affixNames, files,delay,unit);
+			List<String> affixNames,List<byte[]> files) {
+		return sendEmailWithAffixHandle(receiver, ccReceiver, subject, content, affixNames, files);
 	}
 
 	@Override
 	public void sendEmailWithAffixAsync(final List<String> receiver,final List<String> ccReceiver,final String subject,
-			final String content,final List<String> affixNames,final List<byte[]> files,final Long delay,final TimeUnit unit) {
+			final String content,final List<String> affixNames,final List<byte[]> files) {
 		mailTaskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
-				sendEmailWithAffixHandle(receiver, ccReceiver, subject, content, affixNames, files,delay,unit);
+				sendEmailWithAffixHandle(receiver, ccReceiver, subject, content, affixNames, files);
 			}
 		});
 	}
 
 	private ResponseDTO<?> sendEmailWithAffixHandle(final List<String> receiver,final List<String> ccReceiver,final String subject, final String content,
-			final List<String> affixNames,final List<byte[]> files,final Long delay,final TimeUnit unit) {
-		try {
-			Thread.sleep(unit.toMillis(delay));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			final List<String> affixNames,final List<byte[]> files) {
 		@SuppressWarnings("rawtypes")
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
@@ -151,24 +134,14 @@ public class MailProviderImpl implements MailProvider {
 	@Override
 	public boolean sendEmailWhithFile(List<String> toList, String subject,
 			String content, List<String> ccList, List<String> affixNames,
-			List<String> filesPath,Long delay,TimeUnit unit) {
-		try {
-			Thread.sleep(unit.toMillis(delay));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			List<String> filesPath) {
 		return emailService.sendEmailWhithFile(toList, subject, content, ccList, affixNames, filesPath);
 	}
 
 	@Override
 	public void sendEmailWhithFileAsync(final List<String> toList, final String subject,
 			final String content, final List<String> ccList, final List<String> affixNames,
-			final List<String> filesPath,final Long delay,final TimeUnit unit) {
-		try {
-			Thread.sleep(unit.toMillis(delay));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			final List<String> filesPath) {
 		mailTaskExecutor.execute(new Runnable() {
 			@Override
 			public void run() {

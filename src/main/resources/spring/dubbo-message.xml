@@ -8,7 +8,7 @@
        default-destroy-method="destroy">
     <dubbo:application name="ddy-message" />
 	<dubbo:registry address="zookeeper://127.0.0.1:2181" />
-	<dubbo:protocol name="dubbo" port="20993"
+	<dubbo:protocol name="dubbo" port="10777"
 		accesslog="true" />
     <dubbo:service interface="com.ddy.message.provider.MailProvider"
 		ref="mailProviderImpl" timeout="5000" retries="0"/>
